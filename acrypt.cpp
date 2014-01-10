@@ -47,7 +47,7 @@ defalut:
     }
 
 
-    //ecryptAES128(pathname,password,flag);
-    ecryptAES128Parallel(NULL,NULL,0);
+    ecryptAES128(pathname,password,flag);
+    //ecryptAES128Parallel(NULL,NULL,0);
     return 0;
 }
