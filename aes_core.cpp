@@ -1,33 +1,10 @@
-/* crypto/aes/aes_core.c -*- mode:C; c-file-style: "eay" -*- */
 /**
- * rijndael-alg-fst.c
- *
- * @version 3.0 (December 2000)
- *
- * Optimised ANSI C code for the Rijndael cipher (now AES)
- *
- * @author Vincent Rijmen <vincent.rijmen@esat.kuleuven.ac.be>
- * @author Antoon Bosselaers <antoon.bosselaers@esat.kuleuven.ac.be>
- * @author Paulo Barreto <paulo.barreto@terra.com.br>
- *
- * This code is hereby placed in the public domain.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ''AS IS'' AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
- * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * @file aes_core.cpp
+ * @brief AES算法
+ * @author sxkj26
+ * @version 1.0.0
+ * @date 2014-01-10
  */
-
-/* Note: rewritten a little bit to provide error control and an OpenSSL-
-   compatible API */
-
 #ifndef AES_DEBUG
 # ifndef NDEBUG
 #  define NDEBUG
@@ -53,6 +30,9 @@ Td3[x] = Si[x].[09, 0d, 0b, 0e];
 Td4[x] = Si[x].[01];
 */
 
+/**
+ * @brief S盒，作用为混淆
+ */
 static const u32 Te0[256] = {
     0xc66363a5U, 0xf87c7c84U, 0xee777799U, 0xf67b7b8dU,
     0xfff2f20dU, 0xd66b6bbdU, 0xde6f6fb1U, 0x91c5c554U,
@@ -623,7 +603,13 @@ static const u32 rcon[] = {
 };
 
 /**
- * Expand the cipher key into the encryption key schedule.
+ * @brief Expand the cipher key into the encryption key schedule
+ *
+ * @param userKey
+ * @param bits
+ * @param key
+ *
+ * @return 
  */
 int AES_set_encrypt_key(const unsigned char *userKey, const int bits,
 			AES_KEY *key) {
@@ -724,7 +710,13 @@ int AES_set_encrypt_key(const unsigned char *userKey, const int bits,
 }
 
 /**
- * Expand the cipher key into the decryption key schedule.
+ * @brief Exand the cipher key into the decryption key schedule
+ *
+ * @param userKey
+ * @param bits
+ * @param key
+ *
+ * @return 
  */
 int AES_set_decrypt_key(const unsigned char *userKey, const int bits,
 			 AES_KEY *key) {
@@ -774,9 +766,12 @@ int AES_set_decrypt_key(const unsigned char *userKey, const int bits,
 	return 0;
 }
 
-/*
- * Encrypt a single block
- * in and out can overlap
+/**
+ * @brief Encrypt a single block,in and out can overlap
+ *
+ * @param in  data in 
+ * @param out encrypt deta out
+ * @param key 
  */
 void AES_encrypt(const unsigned char *in, unsigned char *out,
 		 const AES_KEY *key) {
@@ -965,9 +960,12 @@ void AES_encrypt(const unsigned char *in, unsigned char *out,
 	PUTU32(out + 12, s3);
 }
 
-/*
- * Decrypt a single block
- * in and out can overlap
+/**
+ * @brief Decrypt a single block , in and out can overlap
+ *
+ * @param in data in
+ * @param out decrypt data out
+ * @param key
  */
 void AES_decrypt(const unsigned char *in, unsigned char *out,
 		 const AES_KEY *key) {
@@ -1299,7 +1297,13 @@ int AES_set_encrypt_key(const unsigned char *userKey, const int bits,
 }
 
 /**
- * Expand the cipher key into the decryption key schedule.
+ * @brief Expand the chiper key into the decryption key schedule
+ *
+ * @param userKey chiper key
+ * @param bits ,128,192,256
+ * @param key
+ *
+ * @return 
  */
 int AES_set_decrypt_key(const unsigned char *userKey, const int bits,
 			 AES_KEY *key) {

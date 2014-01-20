@@ -2,14 +2,21 @@
 
 #include "AESEncrypt.h"
 
+/* 
+ *
+ *
+ *
+ */
+
 /**
-* @brief 
-*
-* @param fd the file descriptor for decrypt
-* @param password
-*
-* @return 
-*/
+ * @brief 加密/解密接口
+ *
+ * @param pathname 需要加密的文件
+ * @param password 加密密码
+ * @param flag 加密解密标志,0为加密,1为解密
+ *
+ * @return 成功返回0,失败返回-1
+ */
 int ecryptAES128(const char * pathname , const char * password , int flag) 
 {
     int ret;
@@ -44,7 +51,7 @@ int ecryptAES128(const char * pathname , const char * password , int flag)
         ret = AES_set_encrypt_key((const unsigned char *)key16,128,&key);
     }else{
         printf("Mode not support\n");
-        return 0;
+        return -1;
     }
     if(ret < 0){
         printf("AES_set_encrypt_key error!\n");
@@ -80,66 +87,34 @@ int ecryptAES128(const char * pathname , const char * password , int flag)
         //printf("processSize:%d\n",processSize);
         unsigned char * pmap=mapmem;
         while(processSize != 0){
-
             if(processSize >= CRYPT_BLOCK_SIZE){
                 if(1 == flag)AES_cbc_encrypt(pmap,out,CRYPT_BLOCK_SIZE,&key,iv,AES_DECRYPT);
                 else if(0 == flag)AES_cbc_encrypt(pmap,out,CRYPT_BLOCK_SIZE,&key,iv,AES_ENCRYPT);
                 memcpy(pmap,out,CRYPT_BLOCK_SIZE);
-                //munmap(mapmem,CRYPT_BLOCK_SIZE);
                 starpos+=CRYPT_BLOCK_SIZE;
                 processSize-=CRYPT_BLOCK_SIZE;
                 pmap+=CRYPT_BLOCK_SIZE;
-                //lseek(fd,starpos,SEEK_SET);
             }else if(processSize < CRYPT_BLOCK_SIZE && processSize >= 1){
-                //mapmem = (unsigned char * )mmap(NULL,ecryptsize,PROT_WRITE|PROT_READ,MAP_SHARED,fd,starpos);
                 if(1 == flag){
-                    //printf("DECRYPT small\n");
-                    //int len=0;
                     AES_cbc_encrypt(pmap,out,processSize,&key,iv,AES_DECRYPT);
-                    //len = processSize;
-                    
-                    //len -=(unsigned char)(mapmem[len-1]);
-
-                    //printf("len = %d\n",len);
-                    //memcpy(mapmem,out,len);
                     memcpy(pmap,out,processSize);
-                    //printf("size: %d\n",(unsigned char )(mapmem[len-1]));
-                    //munmap(mapmem,processSize);
                     processSize = 0;
                 }
 
                 else if(0 == flag){
-                        //printf("ENCRYPT small\n");
                         AES_cbc_encrypt(pmap,out,processSize,&key,iv,AES_ENCRYPT);
                         ret = processSize;
                         processSize = (processSize & 0xFFFFFFF0) +((processSize & 0xF)?16:0);
                         *(out+processSize) = (processSize - ret);
                         memcpy(pmap,out,processSize+1);
-                        //if(processSize < 0){
-                                //return -1;
-                        //}
-                       processSize = 0; 
+                        processSize = 0; 
                 }
 
             }
         }
         pagecout--;
         munmap(mapmem,umapsize);
-        
     }
     close(fd);
     return 0;
 }
-
-
-int ecryptAES128Parallel(const char * pathname , const char * password , int flag) 
-{
- //       long cores=1;
-//        cores = sysconf(_SC_NPROCESSORS_CONF);
-
-        return 0;
-        
-}
-
-
-

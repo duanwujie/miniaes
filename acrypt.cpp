@@ -8,15 +8,10 @@ void Usage()
 
 int ecryptAES128(const char *pathname, const char * password, int flag);
 
+
+
 int main(int argc, char * argv[])
 {
-    //cryptfWithAES128("./a.txt","1234567890abcdef");
-
-    //if(argc != 2){
-    //    printf("arg error do noting\n");
-    //    return -1;
-    //}
-    //
     char pathname[128]={0};
     char password[64]={0};
     int  flag=0;
@@ -48,6 +43,5 @@ defalut:
 
 
     ecryptAES128(pathname,password,flag);
-    //ecryptAES128Parallel(NULL,NULL,0);
     return 0;
 }
